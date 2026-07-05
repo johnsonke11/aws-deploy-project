@@ -29,7 +29,7 @@ async function fetchStock() {
         errorDiv.textContent = 'Failed to fetch stock data.';
     }
 }
-async function loadHistory(params) {
+async function loadHistory() {
     const ticker = getTickerInput();
     const errorDiv = document.getElementById('error-display');
     errorDiv.textContent= '';
