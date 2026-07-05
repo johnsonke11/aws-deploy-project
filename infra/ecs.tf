@@ -22,6 +22,21 @@ resource "aws_ecs_task_definition" "flask_app" {
           protocol      = "tcp"
         }
       ]
+      secrets = [
+        {
+          name = "DATABASE_URL"
+          valueFrom = aws_secretsmanager_secret.db_url.arn
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group" = "/ecs/flask-app"
+          "awslogs-region" = "us-east-1"
+          "awslogs-stream-prefix" = "ecs"
+          "awslogs-create-group" = "true"
+        }
+      }
     }
   ])
 }
