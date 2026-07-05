@@ -39,3 +39,25 @@ resource "aws_iam_role_policy_attachment" "secrets_policy_attachment" {
   role = aws_iam_role.ecs_task_execution_role.name
   policy_arn = aws_iam_policy.secrets_policy.arn
 }
+resource "aws_iam_policy" "logs_policy" {
+  name = "ecs_logs_policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+        {
+            Effect = "Allow"
+            Action = [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ]
+            Resource = "arn:aws:logs:us-east-1:882282737373:*"
+        }
+    ]
+  })
+}
+resource "aws_iam_role_policy_attachment" "logs_policy_attachment" {
+  role = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.logs_policy.arn
+}
