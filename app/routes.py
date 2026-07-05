@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template
 from app.models import db, StockPrice
 import yfinance as yf
 
@@ -54,3 +54,20 @@ def history():
             .limit(10)\
             .all()
     return jsonify([r.to_dict() for r in records]), 200
+
+@main.route("/dashboard")
+def dashboard():
+    ticker = request.args.get("ticker", "APPL").upper()
+
+    record = StockPrice.query().filter_by(ticker=ticker)\
+            .order_by(StockPrice.timestamp.desc())\
+            .first()
+    current_price = record.price if record else None
+    currency = record.currency if record else None
+
+    return render_template(
+        "dashboard.html",
+        ticker= ticker,
+        current_price =current_price,
+        currency = currency
+    )
