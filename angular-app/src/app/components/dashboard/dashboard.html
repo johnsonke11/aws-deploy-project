@@ -1,0 +1,23 @@
+<div class="container">
+  <h1>Stock Price Tracker</h1>
+
+  <div class="search-bar">
+    <input
+      type="text"
+      [(ngModel)]="ticker"
+      placeholder="Enter ticker (e.g. AAPL)"
+    />
+    <button (click)="fetchStock()">Fetch & Track</button>
+    <button (click)="loadHistory()">Load History</button>
+  </div>
+
+  <div class="price-display" *ngIf="currentQuote">
+    {{ currentQuote.ticker }}: ${{ currentQuote.price.toFixed(2) }} {{ currentQuote.currency }}
+  </div>
+
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="chart-container">
+    <canvas #priceChart></canvas>
+  </div>
+</div>
