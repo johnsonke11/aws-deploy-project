@@ -21,7 +21,7 @@ resource "aws_db_subnet_group" "main" {
   subnet_ids = [aws_subnet.private_a.id, aws_subnet.private_b.id]
 
   tags = {
-    Name = "flask-ask-db-subnet-group"
+    Name = "flask-app-db-subnet-group"
   }
 }
 resource "aws_security_group" "rds_sg" {
@@ -41,5 +41,11 @@ resource "aws_security_group" "rds_sg" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+  from_port   = 5432
+  to_port     = 5432
+  protocol    = "tcp"
+  cidr_blocks = ["10.0.0.0/16"]
   }
 }
