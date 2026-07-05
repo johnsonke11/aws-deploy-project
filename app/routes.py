@@ -59,7 +59,7 @@ def history():
 def dashboard():
     ticker = request.args.get("ticker", "APPL").upper()
 
-    record = StockPrice.query().filter_by(ticker=ticker)\
+    record = StockPrice.query.filter_by(ticker=ticker)\
             .order_by(StockPrice.timestamp.desc())\
             .first()
     current_price = record.price if record else None
