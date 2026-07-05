@@ -14,8 +14,8 @@ async function fetchStock() {
     errorDiv.textContent= '';
 
     try {
-        const response = await fetch('/quote?ticker=${ticker}');
-        const data = await response.json;
+        const response = await fetch(`/quote?ticker=${ticker}`);
+        const data = await response.json();
 
         if (data.error)
         {
@@ -51,7 +51,7 @@ async function loadHistory() {
         errorDiv.textContent = 'Failed to load history.';    
     }
 }
-function renderChart(ticker, labels, price) {
+function renderChart(ticker, labels, prices) {
     const ctx = document.getElementById('priceChart').getContext('2d');
 
     if (chart) {
