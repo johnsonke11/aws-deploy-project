@@ -44,6 +44,8 @@ jobs:
           terraform_version: "1.5.0"
       
       - name: Update CloudFront origin IP
+        env:
+          TF_VAR_db_password: ${{ secrets.TF_VAR_DB_PASSWORD }}
         run: |
           sleep 60
           TASK_ARN=$(aws ecs list-tasks --cluster flask-app-cluster --query 'taskArns[0]' --output text)
