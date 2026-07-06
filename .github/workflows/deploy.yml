@@ -37,6 +37,16 @@ jobs:
       - name: Deploy to ECS
         run: |
           aws ecs update-service --cluster flask-app-cluster --service flask-app-service --force-new-deployment
+      
+      - name: Update CloudFront origin IP
+        run: |
+          sleep 60
+          TASK_ARN=$(aws ecs list-tasks --cluster flask-app-cluster --query 'taskArns[0]' --output text)
+          ENI=$(aws ecs describe-tasks --cluster flask-app-cluster --tasks $TASK_ARN --query 'tasks[0].attachments[0].details[?name==`networkInterfaceId`].value' --output text)
+          IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI --query 'NetworkInterfaces[0].Association.PublicIp' --output text)
+          cd infra
+          terraform init
+          terraform apply -auto-approve -var="ecs_task_ip=$IP"
 
   deploy-frontend:
     runs-on: ubuntu-latest
