@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "deploy": "ng build && npx angular-cli-ghpages --dir=dist/angular-app/browser --base-href=/aws-deploy-project/",
+    "deploy": "ng build && npx angular-cli-ghpages --dir=dist/angular-app/browser",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:angular-app": "node dist/angular-app/server/server.mjs"
