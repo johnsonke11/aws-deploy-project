@@ -1,10 +1,12 @@
-﻿name: Deploy to ECS
+﻿name: Deploy to ECS and GitHub Pages
+
 on:
   push:
     branches:
       - main
+
 jobs:
-  deploy:
+  deploy-backend:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,8 +33,44 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Deploy to ECS
         run: |
           aws ecs update-service --cluster flask-app-cluster --service flask-app-service --force-new-deployment
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    needs: deploy-backend
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: angular-app
+        run: npm install
+
+      - name: Build Angular app
+        working-directory: angular-app
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        working-directory: angular-app
+        run: npm run deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

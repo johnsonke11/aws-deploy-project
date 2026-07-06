@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    apiURL: 'http://3.88.213.166:5000'
+    apiURL: 'https://d1k2f5ij7b6cii.cloudfront.net/'
 
 };
