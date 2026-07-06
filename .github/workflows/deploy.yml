@@ -38,6 +38,11 @@ jobs:
         run: |
           aws ecs update-service --cluster flask-app-cluster --service flask-app-service --force-new-deployment
       
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.5.0"
+      
       - name: Update CloudFront origin IP
         run: |
           sleep 60
