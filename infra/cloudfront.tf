@@ -26,6 +26,7 @@ resource "aws_cloudfront_distribution" "flask_api" {
 
     forwarded_values {
       query_string = true
+      headers      = ["Origin", "Access-Control-Request-Headers", "Access-Control-Request-Method"]
       cookies {
         forward = "none"
       }
